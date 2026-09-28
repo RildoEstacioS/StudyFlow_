@@ -1,0 +1,62 @@
+package br.rildo.studyflow.domain;
+
+import java.time.LocalDateTime;
+
+public class DesempenhoTopico {
+    private Long id;
+    private Long topicoId;
+    private int questoesRespondidas;
+    private int percentualAcertos;
+    private LocalDateTime ultimaAtualizacao;
+
+    public DesempenhoTopico() {
+    }
+
+    public DesempenhoTopico(Long id, Long topicoId, int questoesRespondidas, int percentualAcertos, LocalDateTime ultimaAtualizacao) {
+        this.id = id;
+        this.topicoId = topicoId;
+        this.questoesRespondidas = questoesRespondidas;
+        this.percentualAcertos = percentualAcertos;
+        this.ultimaAtualizacao = ultimaAtualizacao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getTopicoId() {
+        return topicoId;
+    }
+
+    public void setTopicoId(Long topicoId) {
+        this.topicoId = topicoId;
+    }
+
+    public int getQuestoesRespondidas() {
+        return questoesRespondidas;
+    }
+
+    public void setQuestoesRespondidas(int questoesRespondidas) {
+        this.questoesRespondidas = questoesRespondidas;
+    }
+
+    public int getPercentualAcertos() {
+        return percentualAcertos;
+    }
+
+    public void setPercentualAcertos(int percentualAcertos) {
+        this.percentualAcertos = percentualAcertos;
+    }
+
+    public LocalDateTime getUltimaAtualizacao() {
+        return ultimaAtualizacao;
+    }
+
+    public void setUltimaAtualizacao(LocalDateTime ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
+    }
+}
