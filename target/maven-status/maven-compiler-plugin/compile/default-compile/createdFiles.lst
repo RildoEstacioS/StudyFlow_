@@ -11,6 +11,7 @@ br\rildo\studyflow\api\controller\DesempenhoController.class
 br\rildo\studyflow\domain\Topico.class
 br\rildo\studyflow\infrastructure\repository\DesempenhoRepositoryEmMemoria.class
 br\rildo\studyflow\infrastructure\repository\RevisaoRepository.class
+br\rildo\studyflow\infrastructure\repository\RevisaoRepositoryJpa.class
 br\rildo\studyflow\domain\Revisao.class
 br\rildo\studyflow\api\dto\RevisaoResponse.class
 br\rildo\studyflow\api\controller\RevisaoController.class
