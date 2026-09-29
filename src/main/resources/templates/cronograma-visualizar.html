@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+
+
+<head>
+    <title>Calendário de Estudos</title>
+</head>
+
+
+<body>
+
+
+<div layout:fragment="content">
+
+
+    <div class="mb-4">
+        <a
+            class="text-decoration-none small"
+            th:href="@{/preparacoes/{id}(id=${preparacaoId})}"
+        >
+            ← Voltar para a preparação
+        </a>
+
+        <h1 class="mt-2 mb-1">Calendário de Estudos</h1>
+    </div>
+
+
+    <!-- Cabeçalho do calendário -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Lado esquerdo: Hoje + navegação + mês/ano -->
+        <div class="d-flex align-items-center gap-2">
+            <a
+                class="btn btn-outline-primary"
+                th:href="@{/preparacoes/{id}/cronograma/hoje(id=${preparacaoId})}"
+            >
+                Hoje
+            </a>
+
+            <a
+                class="btn btn-outline-secondary"
+                th:href="@{/preparacoes/{id}/cronograma/visualizar(id=${preparacaoId}, ano=${ano}, mes=${mes - 1})}"
+                th:if="${mes > 1}"
+            >
+                &lt;
+            </a>
+
+            <a
+                class="btn btn-outline-secondary"
+                th:href="@{/preparacoes/{id}/cronograma/visualizar(id=${preparacaoId}, ano=${ano - 1}, mes=${12})}"
+                th:if="${mes == 1}"
+            >
+                &lt;
+            </a>
+
+            <span class="fw-semibold" th:text="${nomeMes} + ' de ' + ${ano}">
+                Mês de Ano
+            </span>
+
+            <a
+                class="btn btn-outline-secondary"
+                th:href="@{/preparacoes/{id}/cronograma/visualizar(id=${preparacaoId}, ano=${ano}, mes=${mes + 1})}"
+                th:if="${mes < 12}"
+            >
+                &gt;
+            </a>
+
+            <a
+                class="btn btn-outline-secondary"
+                th:href="@{/preparacoes/{id}/cronograma/visualizar(id=${preparacaoId}, ano=${ano + 1}, mes=${1})}"
+                th:if="${mes == 12}"
+            >
+                &gt;
+            </a>
+        </div>
+
+        <!-- Lado direito: Editar, Excluir, Imprimir -->
+        <div class="d-flex align-items-center gap-2">
+            <a
+                class="btn btn-outline-secondary"
+                th:href="@{/preparacoes/{id}/cronograma/configurar(id=${preparacaoId})}"
+                title="Editar"
+            >
+                ✏️
+            </a>
+
+            <button
+                class="btn btn-outline-danger"
+                th:onclick="'confirm(\'Tem certeza que deseja excluir este cronograma?\')'"
+                title="Excluir"
+            >
+                🗑️
+            </button>
+
+            <button
+                class="btn btn-outline-secondary"
+                title="Imprimir"
+                disabled
+            >
+                🖨️
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Calendário (MVP: lista de dias com tarefas) -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Dom</th>
+                    <th>Seg</th>
+                    <th>Ter</th>
+                    <th>Qua</th>
+                    <th>Qui</th>
+                    <th>Sex</th>
+                    <th>Sáb</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${tarefasPorDia}">
+                    <td colspan="7">
+                        <strong th:text="${entry.key}">Data</strong>
+
+                        <div class="row g-2 mt-2">
+                            <div
+                                class="col-md-4"
+                                th:each="tarefa : ${entry.value}"
+                            >
+                                <div class="card h-100">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted" th:text="${tarefa.tipo}">
+                                            Tipo
+                                        </small>
+
+                                        <p class="mb-1 fw-semibold" th:if="${tarefa.topicoId != null}">
+                                            <span th:text="${topicoPorId.get(tarefa.topicoId).nome}">
+                                                Tópico
+                                            </span>
+                                        </p>
+
+                                        <p class="mb-0" th:if="${tarefa.topicoId == null}">
+                                            Simulado
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#maps.isEmpty(tarefasPorDia)}">
+                    <td colspan="7" class="text-center text-muted">
+                        Nenhuma tarefa neste mês.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+</html>

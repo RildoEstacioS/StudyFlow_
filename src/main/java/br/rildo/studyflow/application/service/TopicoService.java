@@ -28,7 +28,7 @@ public class TopicoService {
         Topico topico = new Topico();
         topico.setPreparacaoId(preparacaoId);
         topico.setNome(request.getNome());
-        topico.setStatus(request.getStatus() != null ? request.getStatus() : StatusTopico.PENDENTE);
+        topico.setStatus(request.getStatus() != null ? request.getStatus() : StatusTopico.NAO_INICIADO);
         topico.setPeso(request.getPeso());
         topico.setCriadoEm(LocalDateTime.now());
 

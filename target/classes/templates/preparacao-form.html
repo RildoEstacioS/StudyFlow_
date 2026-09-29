@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Nova preparação - StudyFlow</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" th:href="@{/}">
+            StudyFlow
+        </a>
+
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/}">
+                Dashboard
+            </a>
+
+            <a class="nav-link active" th:href="@{/preparacoes}">
+                Preparações
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">Nova preparação</h1>
+
+                    <p class="text-muted mb-0">
+                        Informe os dados gerais do seu objetivo de estudo.
+                    </p>
+                </div>
+
+                <a
+                    th:href="@{/preparacoes}"
+                    class="btn btn-outline-secondary"
+                >
+                    Voltar
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form
+                        th:action="@{/preparacoes}"
+                        th:object="${preparacao}"
+                        method="post"
+                    >
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="nome" class="form-label">
+                                    Nome da preparação
+                                </label>
+
+                                <input
+                                    id="nome"
+                                    type="text"
+                                    class="form-control"
+                                    th:field="*{nome}"
+                                    placeholder="Ex.: PMPE Soldado 2027"
+                                    required
+                                >
+
+                                <div class="form-text">
+                                    Use um nome que facilite identificar seu objetivo.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="banca" class="form-label">
+                                    Banca organizadora
+                                </label>
+
+                                <input
+                                    id="banca"
+                                    type="text"
+                                    class="form-control"
+                                    th:field="*{banca}"
+                                    placeholder="Ex.: Instituto AOCP"
+                                >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dataAlvo" class="form-label">
+                                    Data-alvo
+                                </label>
+
+                                <input
+                                    id="dataAlvo"
+                                    type="date"
+                                    class="form-control"
+                                    th:field="*{dataAlvo}"
+                                >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="tipoDataAlvo" class="form-label">
+                                    Tipo da data
+                                </label>
+
+                                <select
+                                    id="tipoDataAlvo"
+                                    class="form-select"
+                                    th:field="*{tipoDataAlvo}"
+                                >
+                                    <option value="">
+                                        Selecione o tipo da data
+                                    </option>
+
+                                    <option value="OFICIAL">
+                                        Oficial — data confirmada do concurso
+                                    </option>
+
+                                    <option value="ESTIMADA">
+                                        Estimada — previsão da prova
+                                    </option>
+                                </select>
+
+                                <div class="form-text">
+                                    Selecione oficial quando a organizadora já divulgou a data.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label
+                                    for="minutosDisponiveisPorSemana"
+                                    class="form-label"
+                                >
+                                    Minutos disponíveis por semana
+                                </label>
+
+                                <input
+                                    id="minutosDisponiveisPorSemana"
+                                    type="number"
+                                    min="1"
+                                    class="form-control"
+                                    th:field="*{minutosDisponiveisPorSemana}"
+                                    placeholder="Ex.: 1200"
+                                >
+
+                                <div class="form-text">
+                                    Exemplo: 1200 minutos equivalem a 20 horas por semana.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label
+                                    for="estrategiaPlanejamento"
+                                    class="form-label"
+                                >
+                                    Como deseja definir suas prioridades?
+                                </label>
+
+                                <select
+                                    id="estrategiaPlanejamento"
+                                    class="form-select"
+                                    th:field="*{estrategiaPlanejamento}"
+                                    required
+                                >
+                                    <option value="">
+                                        Selecione uma estratégia
+                                    </option>
+
+                                    <option value="COMBINADA">
+                                        Combinada — recomendada para a maioria dos casos
+                                    </option>
+
+                                    <option value="PRAZO">
+                                        Por prazo — concluir o edital até a data da prova
+                                    </option>
+
+                                    <option value="DESEMPENHO">
+                                        Por desempenho — priorizar suas maiores dificuldades
+                                    </option>
+
+                                    <option value="REVISAO">
+                                        Por revisões — priorizar conteúdos vencidos ou próximos
+                                    </option>
+                                </select>
+
+                                <div class="form-text">
+                                    Essa escolha ajuda o sistema a sugerir a ordem dos seus estudos.
+                                    Você poderá alterá-la mais tarde.
+                                </div>
+
+                                <div
+                                    id="explicacaoEstrategia"
+                                    class="alert alert-light border mt-3 mb-0"
+                                    role="status"
+                                >
+                                    Selecione uma estratégia para entender como ela será utilizada.
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a
+                                th:href="@{/preparacoes}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">
+                                Salvar preparação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="container py-4 text-center text-muted">
+    <hr>
+    <small>StudyFlow © 2026</small>
+</footer>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<script>
+    const seletorEstrategia = document.getElementById(
+        'estrategiaPlanejamento'
+    );
+
+    const explicacaoEstrategia = document.getElementById(
+        'explicacaoEstrategia'
+    );
+
+    if (seletorEstrategia && explicacaoEstrategia) {
+        const explicacoes = {
+            COMBINADA:
+                'Recomendada para a maioria dos casos. O sistema combina prazo, peso das disciplinas, desempenho e revisões para sugerir suas prioridades.',
+
+            PRAZO:
+                'Indicada quando a data da prova é o principal fator. O sistema prioriza conteúdos que precisam ser concluídos antes da data-alvo.',
+
+            DESEMPENHO:
+                'Indicada quando você quer atacar suas dificuldades. O sistema prioriza disciplinas e tópicos com menor percentual de acertos.',
+
+            REVISAO:
+                'Indicada quando sua prioridade é não esquecer o que estudou. O sistema prioriza revisões atrasadas, vencidas e próximas.'
+        };
+
+        function atualizarExplicacaoEstrategia() {
+            const estrategiaSelecionada = seletorEstrategia.value;
+
+            explicacaoEstrategia.textContent =
+                explicacoes[estrategiaSelecionada]
+                || 'Selecione uma estratégia para entender como ela será utilizada.';
+        }
+
+        seletorEstrategia.addEventListener(
+            'change',
+            atualizarExplicacaoEstrategia
+        );
+
+        atualizarExplicacaoEstrategia();
+    }
+</script>
+
+</body>
+</html>

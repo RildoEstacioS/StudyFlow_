@@ -6,16 +6,25 @@ public class DesempenhoResponse {
     private Long id;
     private Long topicoId;
     private int questoesRespondidas;
+    private int acertos;
     private int percentualAcertos;
     private LocalDateTime ultimaAtualizacao;
 
     public DesempenhoResponse() {
     }
 
-    public DesempenhoResponse(Long id, Long topicoId, int questoesRespondidas, int percentualAcertos, LocalDateTime ultimaAtualizacao) {
+    public DesempenhoResponse(
+            Long id,
+            Long topicoId,
+            int questoesRespondidas,
+            int acertos,
+            int percentualAcertos,
+            LocalDateTime ultimaAtualizacao
+    ) {
         this.id = id;
         this.topicoId = topicoId;
         this.questoesRespondidas = questoesRespondidas;
+        this.acertos = acertos;
         this.percentualAcertos = percentualAcertos;
         this.ultimaAtualizacao = ultimaAtualizacao;
     }
@@ -42,6 +51,14 @@ public class DesempenhoResponse {
 
     public void setQuestoesRespondidas(int questoesRespondidas) {
         this.questoesRespondidas = questoesRespondidas;
+    }
+
+    public int getAcertos() {
+        return acertos;
+    }
+
+    public void setAcertos(int acertos) {
+        this.acertos = acertos;
     }
 
     public int getPercentualAcertos() {

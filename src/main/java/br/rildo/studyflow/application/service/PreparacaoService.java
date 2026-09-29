@@ -1,54 +1,55 @@
 package br.rildo.studyflow.application.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import br.rildo.studyflow.api.dto.CriarPreparacaoRequest;
-import br.rildo.studyflow.api.dto.PreparacaoResponse;
 import br.rildo.studyflow.domain.Preparacao;
-import br.rildo.studyflow.infrastructure.repository.PreparacaoRepository;
+import br.rildo.studyflow.infrastructure.repository.PreparacaoRepositoryJpa;
 
 @Service
 public class PreparacaoService {
 
-    private final PreparacaoRepository repository;
+    private final PreparacaoRepositoryJpa repository;
 
-    public PreparacaoService(PreparacaoRepository repository) {
+    public PreparacaoService(PreparacaoRepositoryJpa repository) {
         this.repository = repository;
     }
 
-    public PreparacaoResponse criar(CriarPreparacaoRequest request) {
-        Preparacao preparacao = new Preparacao();
-        preparacao.setNome(request.getNome());
-        preparacao.setBanca(request.getBanca());
-        preparacao.setDataAlvo(request.getDataAlvo());
-        preparacao.setTipoDataAlvo(request.getTipoDataAlvo());
-        preparacao.setMinutosDisponiveisPorSemana(request.getMinutosDisponiveisPorSemana());
-        preparacao.setEstrategiaPlanejamento(request.getEstrategiaPlanejamento());
-
-        Preparacao salva = repository.salvar(preparacao);
-        return paraResponse(salva);
+    public List<Preparacao> listarTodas() {
+        return repository.findAll();
     }
 
-    public List<PreparacaoResponse> listarTodas() {
-        List<Preparacao> todas = repository.listarTodos();
-        return todas.stream()
-                .map(this::paraResponse)
-                .collect(Collectors.toList());
+    public Optional<Preparacao> buscarPorId(Long id) {
+        return repository.findById(id);
     }
 
-    private PreparacaoResponse paraResponse(Preparacao preparacao) {
-        return new PreparacaoResponse(
-                preparacao.getId(),
-                preparacao.getNome(),
-                preparacao.getBanca(),
-                preparacao.getDataAlvo(),
-                preparacao.getTipoDataAlvo(),
-                preparacao.getMinutosDisponiveisPorSemana(),
-                preparacao.getEstrategiaPlanejamento(),
-                preparacao.getCriadaEm()
+    public Preparacao criar(Preparacao preparacao) {
+        return repository.save(preparacao);
+    }
+
+    public Preparacao atualizar(Long id, Preparacao preparacaoAtualizada) {
+        Preparacao preparacaoExistente = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Preparação não encontrada: " + id
+                ));
+
+        preparacaoExistente.setNome(preparacaoAtualizada.getNome());
+        preparacaoExistente.setBanca(preparacaoAtualizada.getBanca());
+        preparacaoExistente.setDataAlvo(preparacaoAtualizada.getDataAlvo());
+        preparacaoExistente.setTipoDataAlvo(preparacaoAtualizada.getTipoDataAlvo());
+        preparacaoExistente.setMinutosDisponiveisPorSemana(
+                preparacaoAtualizada.getMinutosDisponiveisPorSemana()
         );
+        preparacaoExistente.setEstrategiaPlanejamento(
+                preparacaoAtualizada.getEstrategiaPlanejamento()
+        );
+
+        return repository.save(preparacaoExistente);
+    }
+
+    public void excluir(Long id) {
+        repository.deleteById(id);
     }
 }

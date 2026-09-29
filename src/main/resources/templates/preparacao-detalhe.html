@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Preparação - StudyFlow</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" th:href="@{/}">
+            StudyFlow
+        </a>
+
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/}">
+                Dashboard
+            </a>
+
+            <a class="nav-link active" th:href="@{/preparacoes}">
+                Preparações
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container my-4">
+
+    <div class="mb-4">
+        <a
+            class="text-decoration-none small"
+            th:href="@{/preparacoes}"
+        >
+            ← Voltar para preparações
+        </a>
+
+        <h1
+            class="mt-2 mb-1"
+            th:text="${preparacao.nome}"
+        >
+            Nome da preparação
+        </h1>
+
+        <p class="text-muted mb-0">
+            Banca:
+            <strong th:text="${preparacao.banca}">
+                Banca
+            </strong>
+        </p>
+    </div>
+
+    <!-- Dados gerais da preparação -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <p class="text-muted small mb-1">Data-alvo</p>
+
+                    <p
+                        class="mb-0 fw-semibold"
+                        th:text="${#temporals.format(preparacao.dataAlvo, 'dd/MM/yyyy')}"
+                    >
+                        01/01/2027
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="text-muted small mb-1">Tipo da data</p>
+
+                    <p
+                        class="mb-0 fw-semibold"
+                        th:text="${preparacao.tipoDataAlvo}"
+                    >
+                        OFICIAL
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="text-muted small mb-1">Disponibilidade</p>
+
+                    <p class="mb-0 fw-semibold">
+                        <span th:text="${preparacao.minutosDisponiveisPorSemana}">
+                            0
+                        </span>
+                        min/semana
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="text-muted small mb-1">Estratégia</p>
+
+                    <p
+                        class="mb-0 fw-semibold"
+                        th:text="${preparacao.estrategiaPlanejamento}"
+                    >
+                        PRAZO
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Disciplinas -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="h4 mb-1">Disciplinas</h2>
+
+            <p class="text-muted mb-0">
+                Cadastre as matérias e, dentro delas, organize os tópicos do edital.
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <a
+                class="btn btn-outline-primary"
+                th:href="@{/preparacoes/{id}/cronograma/configurar(id=${preparacao.id})}"
+            >
+                Configurar cronograma
+            </a>
+
+            <span
+                class="badge text-bg-secondary fs-6"
+                th:text="${#lists.size(disciplinas)} + ' disciplina(s)'"
+            >
+                0 disciplina(s)
+            </span>
+
+            <a
+                class="btn btn-primary"
+                th:href="@{/preparacoes/{id}/disciplinas/nova(id=${preparacao.id})}"
+            >
+                + Nova disciplina
+            </a>
+        </div>
+    </div>
+
+    <div
+        class="alert alert-info"
+        th:if="${#lists.isEmpty(disciplinas)}"
+    >
+        Nenhuma disciplina foi cadastrada nesta preparação.
+
+        <a
+            class="alert-link"
+            th:href="@{/preparacoes/{id}/disciplinas/nova(id=${preparacao.id})}"
+        >
+            Cadastre a primeira disciplina.
+        </a>
+    </div>
+
+    <div
+        class="row g-3"
+        th:unless="${#lists.isEmpty(disciplinas)}"
+    >
+        <div
+            class="col-12"
+            th:each="disciplina : ${disciplinas}"
+        >
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                        <div>
+                            <div class="d-flex align-items-center gap-2">
+                                <h3
+                                    class="h5 mb-0"
+                                    th:text="${disciplina.nome}"
+                                >
+                                    Nome da disciplina
+                                </h3>
+
+                                <span
+                                    class="badge text-bg-secondary"
+                                    th:text="'Peso ' + ${disciplina.peso}"
+                                >
+                                    Peso 1
+                                </span>
+                            </div>
+
+                            <p class="text-muted small mt-2 mb-0">
+                                Cadastre e acompanhe os tópicos desta disciplina.
+                            </p>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-shrink-0">
+                            <a
+                                class="btn btn-sm btn-outline-secondary"
+                                th:href="@{/disciplinas/{id}/editar(id=${disciplina.id})}"
+                            >
+                                Editar
+                            </a>
+
+                            <a
+                                class="btn btn-sm btn-outline-danger"
+                                th:href="@{/disciplinas/{id}/excluir(id=${disciplina.id})}"
+                            >
+                                Excluir
+                            </a>
+
+                            <a
+                                class="btn btn-sm btn-outline-primary"
+                                th:href="@{/disciplinas/{id}/topicos/novo(id=${disciplina.id})}"
+                            >
+                                + Novo tópico
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-3">
+                        <div
+                            class="alert alert-light border mb-0 py-2"
+                            th:if="${topicosPorDisciplina.get(disciplina.id) == null
+                                or #lists.isEmpty(topicosPorDisciplina.get(disciplina.id))}"
+                        >
+                            <span class="small">
+                                Nenhum tópico cadastrado nesta disciplina.
+                            </span>
+                        </div>
+
+                        <div
+                            class="table-responsive"
+                            th:unless="${topicosPorDisciplina.get(disciplina.id) == null
+                                or #lists.isEmpty(topicosPorDisciplina.get(disciplina.id))}"
+                        >
+                            <table class="table table-sm table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tópico</th>
+                                        <th class="text-center">Peso</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Questões</th>
+                                        <th class="text-center">Acertos</th>
+                                        <th class="text-center">%</th>
+                                        <th class="text-center">Última sessão</th>
+                                        <th class="text-end">Ações</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr
+                                        th:each="topico : ${topicosPorDisciplina.get(disciplina.id)}"
+                                    >
+                                        <td>
+                                            <strong th:text="${topico.nome}">
+                                                Nome do tópico
+                                            </strong>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span
+                                                class="badge text-bg-secondary"
+                                                th:text="${topico.peso}"
+                                            >
+                                                1
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <!-- Status com cores dinâmicas -->
+                                            <span
+                                                class="badge"
+                                                th:classappend="${topico.status.classeBootstrap}"
+                                                th:style="'background-color: ' + ${topico.status.corHex} + '; color: white;'"
+                                                th:text="${topico.status.label}"
+                                            >
+                                                Status
+                                            </span>
+                                        </td>
+
+                                        <!-- Questões -->
+                                        <td class="text-center">
+                                            <span
+                                                th:if="${desempenhosPorTopico.containsKey(topico.id)}"
+                                                th:text="${desempenhosPorTopico.get(topico.id).questoesRespondidas}"
+                                            >
+                                                0
+                                            </span>
+
+                                            <span
+                                                th:unless="${desempenhosPorTopico.containsKey(topico.id)}"
+                                            >
+                                                —
+                                            </span>
+                                        </td>
+
+                                        <!-- Acertos (quantidade) -->
+                                        <td class="text-center">
+                                            <span
+                                                th:if="${desempenhosPorTopico.containsKey(topico.id)}"
+                                                th:text="${desempenhosPorTopico.get(topico.id).acertos}"
+                                            >
+                                                0
+                                            </span>
+
+                                            <span
+                                                th:unless="${desempenhosPorTopico.containsKey(topico.id)}"
+                                            >
+                                                —
+                                            </span>
+                                        </td>
+
+                                        <!-- Percentual -->
+                                        <td class="text-center">
+                                            <span
+                                                class="fw-semibold"
+                                                th:if="${desempenhosPorTopico.containsKey(topico.id)}"
+                                                th:text="${desempenhosPorTopico.get(topico.id).percentualAcertos + '%'}"
+                                            >
+                                                0%
+                                            </span>
+
+                                            <span
+                                                th:unless="${desempenhosPorTopico.containsKey(topico.id)}"
+                                            >
+                                                —
+                                            </span>
+                                        </td>
+
+                                        <!-- Última sessão -->
+                                        <td class="text-center">
+                                            <span
+                                                th:if="${desempenhosPorTopico.containsKey(topico.id)}"
+                                                th:text="${#temporals.format(desempenhosPorTopico.get(topico.id).ultimaAtualizacao, 'dd/MM/yyyy')}"
+                                            >
+                                                01/01/2026
+                                            </span>
+
+                                            <span
+                                                th:unless="${desempenhosPorTopico.containsKey(topico.id)}"
+                                            >
+                                                —
+                                            </span>
+                                        </td>
+
+                                        <!-- Ações -->
+                                        <td class="text-end">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <a
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    th:href="@{/topicos/{id}/desempenho(id=${topico.id})}"
+                                                >
+                                                    Desempenho
+                                                </a>
+
+                                                <a
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    th:href="@{/topicos/{id}/editar(id=${topico.id})}"
+                                                >
+                                                    Editar
+                                                </a>
+
+                                                <a
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    th:href="@{/topicos/{id}/excluir(id=${topico.id})}"
+                                                >
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="container py-4 text-center text-muted">
+    <hr>
+    <small>StudyFlow © 2026</small>
+</footer>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

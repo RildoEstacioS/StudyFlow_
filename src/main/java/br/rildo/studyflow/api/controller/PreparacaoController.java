@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.rildo.studyflow.api.dto.CriarPreparacaoRequest;
-import br.rildo.studyflow.api.dto.PreparacaoResponse;
 import br.rildo.studyflow.application.service.PreparacaoService;
+import br.rildo.studyflow.domain.Preparacao;
 
 @RestController
 @RequestMapping("/api/preparacoes")
@@ -25,15 +24,15 @@ public class PreparacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<PreparacaoResponse> criar(@RequestBody CriarPreparacaoRequest request) {
-        PreparacaoResponse resposta = service.criar(request);
-        URI localizacao = URI.create("/api/preparacoes/" + resposta.getId());
-        return ResponseEntity.created(localizacao).body(resposta);
+    public ResponseEntity<Preparacao> criar(@RequestBody Preparacao preparacao) {
+        Preparacao salva = service.criar(preparacao);
+        URI localizacao = URI.create("/api/preparacoes/" + salva.getId());
+        return ResponseEntity.created(localizacao).body(salva);
     }
 
     @GetMapping
-    public ResponseEntity<List<PreparacaoResponse>> listarTodas() {
-        List<PreparacaoResponse> todas = service.listarTodas();
+    public ResponseEntity<List<Preparacao>> listarTodas() {
+        List<Preparacao> todas = service.listarTodas();
         return ResponseEntity.ok(todas);
     }
 }

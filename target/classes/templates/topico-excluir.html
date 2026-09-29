@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Excluir tópico - StudyFlow</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" th:href="@{/}">
+            StudyFlow
+        </a>
+
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/}">
+                Dashboard
+            </a>
+
+            <a class="nav-link active" th:href="@{/preparacoes}">
+                Preparações
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <a
+                class="text-decoration-none small"
+                th:href="@{/preparacoes/{id}(id=${preparacao.id})}"
+            >
+                ← Voltar para a preparação
+            </a>
+
+            <h1 class="h3 mt-2 mb-3">
+                Excluir tópico
+            </h1>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <div
+                        class="alert alert-warning"
+                        th:if="${podeExcluir}"
+                    >
+                        Você está prestes a excluir este tópico.
+                        Esta ação não poderá ser desfeita.
+                    </div>
+
+                    <div
+                        class="alert alert-danger"
+                        th:unless="${podeExcluir}"
+                    >
+                        Este tópico não pode ser excluído porque possui
+                        desempenho registrado ou revisões vinculadas.
+                    </div>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Preparação</dt>
+                        <dd
+                            class="col-sm-8"
+                            th:text="${preparacao.nome}"
+                        >
+                            Nome da preparação
+                        </dd>
+
+                        <dt class="col-sm-4">Disciplina</dt>
+                        <dd
+                            class="col-sm-8"
+                            th:text="${disciplina.nome}"
+                        >
+                            Nome da disciplina
+                        </dd>
+
+                        <dt class="col-sm-4">Tópico</dt>
+                        <dd
+                            class="col-sm-8 fw-semibold"
+                            th:text="${topico.nome}"
+                        >
+                            Nome do tópico
+                        </dd>
+
+                        <dt class="col-sm-4">Peso</dt>
+                        <dd
+                            class="col-sm-8"
+                            th:text="${topico.peso}"
+                        >
+                            1
+                        </dd>
+
+                        <dt class="col-sm-4">Desempenho registrado</dt>
+                        <dd class="col-sm-8">
+                            <span
+                                class="badge"
+                                th:classappend="${possuiDesempenho}
+                                    ? ' text-bg-danger'
+                                    : ' text-bg-success'"
+                                th:text="${possuiDesempenho} ? 'Sim' : 'Não'"
+                            >
+                                Não
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Revisões vinculadas</dt>
+                        <dd class="col-sm-8">
+                            <span
+                                class="badge"
+                                th:classappend="${quantidadeRevisoes > 0}
+                                    ? ' text-bg-danger'
+                                    : ' text-bg-success'"
+                                th:text="${quantidadeRevisoes}"
+                            >
+                                0
+                            </span>
+                        </dd>
+                    </dl>
+
+                    <p
+                        class="text-muted small"
+                        th:unless="${podeExcluir}"
+                    >
+                        Para excluir este tópico, primeiro trate os dados vinculados.
+                        O bloqueio protege seu histórico de desempenho e suas revisões.
+                    </p>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a
+                            class="btn btn-outline-secondary"
+                            th:href="@{/preparacoes/{id}(id=${preparacao.id})}"
+                        >
+                            Cancelar
+                        </a>
+
+                        <form
+                            th:if="${podeExcluir}"
+                            th:action="@{/topicos/{id}/excluir(id=${topico.id})}"
+                            method="post"
+                        >
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                Confirmar exclusão
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer class="container py-4 text-center text-muted">
+    <hr>
+    <small>StudyFlow © 2026</small>
+</footer>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
