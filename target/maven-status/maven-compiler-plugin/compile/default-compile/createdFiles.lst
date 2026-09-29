@@ -2,6 +2,7 @@ br\rildo\studyflow\infrastructure\repository\DisciplinaRepository.class
 br\rildo\studyflow\application\service\PreparacaoService.class
 br\rildo\studyflow\infrastructure\repository\DesempenhoRepositoryJpa.class
 br\rildo\studyflow\infrastructure\repository\DesempenhoRepository.class
+br\rildo\studyflow\api\dto\PreparacaoDTO.class
 br\rildo\studyflow\api\dto\TopicoResponse.class
 br\rildo\studyflow\infrastructure\repository\RevisaoRepositoryEmMemoria.class
 br\rildo\studyflow\api\dto\CriarTopicoRequest.class
@@ -19,7 +20,6 @@ br\rildo\studyflow\domain\Preparacao.class
 br\rildo\studyflow\domain\DesempenhoTopico.class
 br\rildo\studyflow\domain\SessaoEstudo.class
 br\rildo\studyflow\domain\enums\TipoDataAlvo.class
-br\rildo\studyflow\api\controller\PreparacaoController.class
 br\rildo\studyflow\api\controller\PreparacaoWebController.class
 br\rildo\studyflow\api\controller\TopicoController.class
 br\rildo\studyflow\api\dto\CriarPreparacaoRequest.class

@@ -13,9 +13,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "preparacoes")
@@ -25,26 +28,31 @@ public class Preparacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(length = 150)
+    @Column(nullable = false, length = 100)
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(max = 100, message = "Nome deve ter no máximo 100 caracteres")
     private String nome;
 
-    @NotBlank
-    @Column(length = 100)
+    @Column(nullable = false, length = 50)
+    @NotBlank(message = "Banca é obrigatória")
+    @Size(max = 50, message = "Banca deve ter no máximo 50 caracteres")
     private String banca;
 
-    @NotNull
+    @NotNull(message = "Data alvo é obrigatória")
+    @Future(message = "Data alvo deve ser no futuro")
     private LocalDate dataAlvo;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 30)
+    @NotNull(message = "Tipo de data é obrigatório")
     private TipoDataAlvo tipoDataAlvo;
 
-    @Positive
-    private int minutosDisponiveisPorSemana;
+    @NotNull(message = "Minutos semanais são obrigatórios")
+    @Min(value = 60, message = "Mínimo de 60 minutos por semana")
+    @Max(value = 5040, message = "Máximo de 5040 minutos (84 horas) por semana")    
+    private Integer minutosDisponiveisPorSemana;
 
-    @NotNull
+    @NotNull(message = "Estratégia é obrigatória")
     @Enumerated(EnumType.STRING)
     @Column(length = 30)
     private EstrategiaPlanejamentoTipo estrategiaPlanejamento;
@@ -132,11 +140,11 @@ public class Preparacao {
         this.tipoDataAlvo = tipoDataAlvo;
     }
 
-    public int getMinutosDisponiveisPorSemana() {
+    public Integer getMinutosDisponiveisPorSemana() {
         return minutosDisponiveisPorSemana;
     }
 
-    public void setMinutosDisponiveisPorSemana(int minutosDisponiveisPorSemana) {
+    public void setMinutosDisponiveisPorSemana(Integer minutosDisponiveisPorSemana) {
         this.minutosDisponiveisPorSemana = minutosDisponiveisPorSemana;
     }
 

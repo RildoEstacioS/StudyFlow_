@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,9 +13,7 @@
     >
 </head>
 
-
 <body class="bg-light">
-
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
@@ -36,9 +33,7 @@
     </div>
 </nav>
 
-
 <main class="container my-4">
-
 
     <div class="mb-4">
         <a
@@ -54,8 +49,12 @@
             Preparação:
             <strong th:text="${preparacao.nome}">Nome da preparação</strong>
         </p>
-    </div>
 
+        <p class="text-muted mb-0">
+            Minutos disponíveis por semana:
+            <strong th:text="${preparacao.minutosDisponiveisPorSemana} + ' minutos'">0 minutos</strong>
+        </p>
+    </div>
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body p-4">
@@ -63,6 +62,7 @@
                 th:action="@{/preparacoes/{id}/cronograma/configurar(id=${preparacao.id})}"
                 th:object="${config}"
                 method="post"
+                id="formCronograma"
             >
                 <h5 class="mb-3">Geral</h5>
 
@@ -267,6 +267,16 @@
                     Selecione os dias em que você pretende estudar e informe quantos minutos por dia.
                 </p>
 
+                <!-- Mensagem de validação -->
+                <div
+                    id="mensagemValidacao"
+                    class="alert alert-warning"
+                    style="display: none;"
+                >
+                    <strong>Atenção!</strong>
+                    <span id="textoValidacao"></span>
+                </div>
+
                 <div class="row g-3 mb-4">
                     <th:block
                         th:each="dia : ${diasSemana}"
@@ -277,11 +287,12 @@
                                 <div class="card-body">
                                     <div class="form-check mb-2">
                                         <input
-                                            class="form-check-input"
+                                            class="form-check-input dia-checkbox"
                                             type="checkbox"
                                             th:id="'diaSelecionado' + ${dia.valor}"
                                             th:name="'configsDia[' + ${dia.valor} + '].selecionado'"
                                             th:checked="${configDia != null}"
+                                            onchange="calcularTotalMinutos()"
                                         >
                                         <label
                                             class="form-check-label fw-semibold"
@@ -307,18 +318,37 @@
 
                                     <input
                                         type="number"
-                                        class="form-control"
+                                        class="form-control dia-minutos"
                                         th:id="'minutos' + ${dia.valor}"
                                         th:name="'configsDia[' + ${dia.valor} + '].minutosDiarios'"
                                         th:value="${configDia != null ? configDia.minutosDiarios : 60}"
                                         min="0"
                                         max="300"
                                         placeholder="Ex.: 60"
+                                        onchange="calcularTotalMinutos()"
+                                        onkeyup="calcularTotalMinutos()"
                                     >
                                 </div>
                             </div>
                         </div>
                     </th:block>
+                </div>
+
+                <!-- Total de minutos -->
+                <div class="alert alert-info mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Total semanal:</strong>
+                            <span id="totalMinutos">0</span> minutos
+                        </div>
+                        <div>
+                            <strong>Esperado:</strong>
+                            <span th:text="${preparacao.minutosDisponiveisPorSemana}">0</span> minutos
+                        </div>
+                        <div>
+                            <strong id="statusTotal" class="text-success">OK</strong>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
@@ -329,7 +359,7 @@
                         Cancelar
                     </a>
 
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="btnSalvar">
                         Salvar configuração
                     </button>
                 </div>
@@ -337,20 +367,84 @@
         </div>
     </div>
 
-
 </main>
-
 
 <footer class="container py-4 text-center text-muted">
     <hr>
     <small>StudyFlow © 2026</small>
 </footer>
 
+<!-- Elemento invisível com o valor dos minutos esperados -->
+<span id="minutosEsperadosValue" th:text="${preparacao.minutosDisponiveisPorSemana}" style="display: none;"></span>
 
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Validação de minutos -->
+<!-- Validação de minutos -->
+<script>
+    // Minutos esperados por semana (lido do elemento invisível)
+    const minutosEsperados = parseInt(document.getElementById('minutosEsperadosValue').textContent) || 0;
+
+    function calcularTotalMinutos() {
+        let total = 0;
+
+        // Para cada checkbox de dia
+        document.querySelectorAll('.dia-checkbox').forEach(function(checkbox) {
+            if (checkbox.checked) {
+                // Extrai o número do dia do name (ex: configsDia[1].selecionado -> 1)
+                const match = checkbox.name.match(/configsDia\[(\d+)\]\.selecionado/);
+                if (match && match[1]) {
+                    const diaValor = match[1];
+                    const inputMinutos = document.getElementById('minutos' + diaValor);
+                    if (inputMinutos) {
+                        const minutos = parseInt(inputMinutos.value) || 0;
+                        total += minutos;
+                    }
+                }
+            }
+        });
+
+        // Atualiza display
+        document.getElementById('totalMinutos').textContent = total;
+
+        // Valida
+        const mensagemDiv = document.getElementById('mensagemValidacao');
+        const textoSpan = document.getElementById('textoValidacao');
+        const statusSpan = document.getElementById('statusTotal');
+        const btnSalvar = document.getElementById('btnSalvar');
+
+        if (total === minutosEsperados) {
+            mensagemDiv.style.display = 'none';
+            statusSpan.textContent = '✓ OK';
+            statusSpan.className = 'text-success';
+            btnSalvar.disabled = false;
+        } else if (total < minutosEsperados) {
+            mensagemDiv.className = 'alert alert-warning';
+            mensagemDiv.style.display = 'block';
+            textoSpan.textContent = 
+                'A soma dos minutos (' + total + ') está abaixo do esperado (' + minutosEsperados + ' minutos). ' +
+                'Faltam ' + (minutosEsperados - total) + ' minutos.';
+            statusSpan.textContent = '⚠ Abaixo';
+            statusSpan.className = 'text-warning';
+            btnSalvar.disabled = false;
+        } else {
+            mensagemDiv.className = 'alert alert-danger';
+            mensagemDiv.style.display = 'block';
+            textoSpan.textContent = 
+                'A soma dos minutos (' + total + ') ultrapassa o esperado (' + minutosEsperados + ' minutos). ' +
+                'Excedeu ' + (total - minutosEsperados) + ' minutos.';
+            statusSpan.textContent = '✖ Acima';
+            statusSpan.className = 'text-danger';
+            btnSalvar.disabled = true;
+        }
+    }
+
+    // Calcula ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        calcularTotalMinutos();
+    });
 </script>
-
 
 </body>
 </html>

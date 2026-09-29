@@ -5,7 +5,6 @@ C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyfl
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\DesempenhoWebController.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\DisciplinaWebController.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\HealthController.java
-C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\PreparacaoController.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\PreparacaoWebController.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\RevisaoController.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\controller\TopicoController.java
@@ -14,6 +13,7 @@ C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyfl
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\CriarTopicoRequest.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\DashboardResponse.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\DesempenhoResponse.java
+C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\PreparacaoDTO.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\PreparacaoResponse.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\RegistrarDesempenhoRequest.java
 C:\Users\Rildo Estácio\Documents\Java\StudyFlow_\src\main\java\br\rildo\studyflow\api\dto\RevisaoResponse.java

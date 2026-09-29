@@ -59,21 +59,29 @@ public class DesempenhoWebController {
         Disciplina disciplina = buscarDisciplina(topico);
         Preparacao preparacao = buscarPreparacao(topico);
 
-        DesempenhoTopico desempenho = desempenhoRepository
-                .findByTopicoId(topico.getId())
-                .orElse(null);
+        DesempenhoTopico desempenho = null;
+        try {
+            desempenho = desempenhoRepository
+                    .findByTopicoId(topico.getId())
+                    .orElse(null);
+        } catch (Exception e) {
+            // Se tiver múltiplos registros, ignora e usa null
+            // O formulário vai mostrar 0, 0
+        }
 
         model.addAttribute("preparacao", preparacao);
         model.addAttribute("disciplina", disciplina);
         model.addAttribute("topico", topico);
 
+        DesempenhoForm form = new DesempenhoForm();
         if (desempenho != null) {
-            model.addAttribute("questoesRespondidas", desempenho.getQuestoesRespondidas());
-            model.addAttribute("percentualAcertos", desempenho.getPercentualAcertos());
+            form.setQuestoesRespondidas(desempenho.getQuestoesRespondidas());
+            form.setAcertos(desempenho.getAcertos());
         } else {
-            model.addAttribute("questoesRespondidas", 0);
-            model.addAttribute("percentualAcertos", 0);
+            form.setQuestoesRespondidas(0);
+            form.setAcertos(0);
         }
+        model.addAttribute("desempenhoForm", form);
 
         return "desempenho-form";
     }

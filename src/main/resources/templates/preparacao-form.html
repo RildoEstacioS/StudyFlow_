@@ -3,10 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Nova preparação - StudyFlow</title>
 
@@ -56,12 +53,19 @@
                 </a>
             </div>
 
+            <!-- Mensagens de erro do servidor -->
+            <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${erro}">Erro!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <form
                         th:action="@{/preparacoes}"
                         th:object="${preparacao}"
                         method="post"
+                        novalidate
                     >
                         <div class="row g-3">
                             <div class="col-12">
@@ -75,11 +79,16 @@
                                     class="form-control"
                                     th:field="*{nome}"
                                     placeholder="Ex.: PMPE Soldado 2027"
+                                    maxlength="100"
                                     required
                                 >
 
                                 <div class="form-text">
                                     Use um nome que facilite identificar seu objetivo.
+                                </div>
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">
+                                    Nome é obrigatório
                                 </div>
                             </div>
 
@@ -94,7 +103,13 @@
                                     class="form-control"
                                     th:field="*{banca}"
                                     placeholder="Ex.: Instituto AOCP"
+                                    maxlength="50"
+                                    required
                                 >
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('banca')}" th:errors="*{banca}">
+                                    Banca é obrigatória
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -107,7 +122,13 @@
                                     type="date"
                                     class="form-control"
                                     th:field="*{dataAlvo}"
+                                    th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                                    required
                                 >
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('dataAlvo')}" th:errors="*{dataAlvo}">
+                                    Data é obrigatória e deve ser no futuro
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -119,6 +140,7 @@
                                     id="tipoDataAlvo"
                                     class="form-select"
                                     th:field="*{tipoDataAlvo}"
+                                    required
                                 >
                                     <option value="">
                                         Selecione o tipo da data
@@ -136,6 +158,10 @@
                                 <div class="form-text">
                                     Selecione oficial quando a organizadora já divulgou a data.
                                 </div>
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tipoDataAlvo')}" th:errors="*{tipoDataAlvo}">
+                                    Tipo de data é obrigatório
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -149,14 +175,20 @@
                                 <input
                                     id="minutosDisponiveisPorSemana"
                                     type="number"
-                                    min="1"
+                                    min="60"
+                                    max="5040"
                                     class="form-control"
                                     th:field="*{minutosDisponiveisPorSemana}"
                                     placeholder="Ex.: 1200"
+                                    required
                                 >
 
                                 <div class="form-text">
                                     Exemplo: 1200 minutos equivalem a 20 horas por semana.
+                                </div>
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('minutosDisponiveisPorSemana')}" th:errors="*{minutosDisponiveisPorSemana}">
+                                    Mínimo 60, máximo 5040 minutos
                                 </div>
                             </div>
 
@@ -198,6 +230,10 @@
                                 <div class="form-text">
                                     Essa escolha ajuda o sistema a sugerir a ordem dos seus estudos.
                                     Você poderá alterá-la mais tarde.
+                                </div>
+
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('estrategiaPlanejamento')}" th:errors="*{estrategiaPlanejamento}">
+                                    Estratégia é obrigatória
                                 </div>
 
                                 <div
@@ -279,6 +315,35 @@
 
         atualizarExplicacaoEstrategia();
     }
+
+    // Validação em tempo real dos minutos
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputMinutos = document.getElementById('minutosDisponiveisPorSemana');
+        if (inputMinutos) {
+            inputMinutos.addEventListener('change', function() {
+                const valor = parseInt(this.value);
+                if (valor < 60 || valor > 5040) {
+                    this.setCustomValidity('Mínimo 60, máximo 5040 minutos');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+
+        // Validação da data
+        const inputData = document.getElementById('dataAlvo');
+        if (inputData) {
+            const hoje = new Date().toISOString().split('T')[0];
+            inputData.min = hoje;
+            inputData.addEventListener('change', function() {
+                if (this.value < hoje) {
+                    this.setCustomValidity('Data não pode ser no passado');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+    });
 </script>
 
 </body>

@@ -83,12 +83,46 @@ public class ConfiguracaoCronogramaWebController {
     public String salvar(
             @PathVariable Long id,
             @ModelAttribute ConfiguracaoCronograma config,
-            @ModelAttribute List<ConfigDiaSemanaForm> configsDia
+            @ModelAttribute List<ConfigDiaSemanaForm> configsDia,
+            Model model
     ) {
         Preparacao preparacao = preparacaoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Preparação não encontrada: " + id
                 ));
+
+        // Calcular total de minutos dos dias selecionados
+        int totalMinutos = 0;
+        if (configsDia != null) {
+            for (ConfigDiaSemanaForm form : configsDia) {
+                if (form.isSelecionado()) {
+                    totalMinutos += form.getMinutosDiarios();
+                }
+            }
+        }
+
+        // Validar se bate com minutos disponíveis por semana
+        if (totalMinutos != preparacao.getMinutosDisponiveisPorSemana()) {
+            // Volta para o formulário com mensagem de erro
+            List<Disciplina> disciplinas = disciplinaRepository.findByPreparacaoId(id);
+            List<ConfigDiaSemana> configsDiaExistente = repositorioDia.listarPorPreparacao(id);
+            configsDiaExistente.sort(Comparator.comparingInt(
+                    c -> c.getDiaSemana().getValor()
+            ));
+
+            model.addAttribute("preparacao", preparacao);
+            model.addAttribute("disciplinas", disciplinas);
+            model.addAttribute("config", config);
+            model.addAttribute("configsDia", configsDiaExistente);
+            model.addAttribute("frequenciasSimulado", FrequenciaSimulado.values());
+            model.addAttribute("tiposRevisao", TipoRevisao.values());
+            model.addAttribute("diasSemana", DiaSemana.values());
+            model.addAttribute("erroMinutos", 
+                    "A soma dos minutos (" + totalMinutos + ") deve ser igual aos minutos disponíveis por semana (" + 
+                    preparacao.getMinutosDisponiveisPorSemana() + ").");
+
+            return "cronograma-config-form";
+        }
 
         config.setPreparacaoId(id);
         repositorioConfig.salvar(config);

@@ -74,6 +74,10 @@ public class DesempenhoService {
     /**
      * Registra uma sessão de estudo com questões e acertos brutos.
      * Usado pelo formulário web de desempenho.
+     * 
+     * Regra de negócio:
+     * - Se já existe desempenho HOJE: substitui valores
+     * - Se é outro dia: cria novo registro
      */
     public DesempenhoResponse registrarSessao(
             Long topicoId,
@@ -99,26 +103,52 @@ public class DesempenhoService {
         }
 
         int percentual = (acertos * 100) / questoesRespondidas;
+        LocalDateTime agora = LocalDateTime.now();
+        LocalDate hoje = LocalDate.now();
 
-        // 1) Criar sessão
+        // 1) Buscar desempenho existente
+        DesempenhoTopico desempenhoExistente = repositorioDesempenho
+                .findByTopicoId(topicoId)
+                .orElse(null);
+
+        // 2) Verificar se é do mesmo dia
+        boolean mesmoDia = false;
+        if (desempenhoExistente != null) {
+            LocalDate dataUltimoDesempenho = desempenhoExistente.getUltimaAtualizacao().toLocalDate();
+            mesmoDia = dataUltimoDesempenho.equals(hoje);
+        }
+
+        // 3) Se for mesmo dia, substitui. Se não, cria novo.
+        DesempenhoTopico desempenho;
+        if (mesmoDia && desempenhoExistente != null) {
+            // Substitui valores
+            desempenhoExistente.setQuestoesRespondidas(questoesRespondidas);
+            desempenhoExistente.setAcertos(acertos);
+            desempenhoExistente.setPercentualAcertos(percentual);
+            desempenhoExistente.setUltimaAtualizacao(agora);
+
+            desempenho = repositorioDesempenho.salvar(desempenhoExistente);
+        } else {
+            // Cria novo registro
+            desempenho = new DesempenhoTopico(
+                topicoId,
+                questoesRespondidas,
+                acertos,
+                percentual
+            );
+            desempenho = repositorioDesempenho.salvar(desempenho);
+        }
+
+        // 4) Criar sessão de estudo (sempre cria, para histórico)
         SessaoEstudo sessao = new SessaoEstudo(
             topicoId,
             questoesRespondidas,
             acertos,
-            LocalDateTime.now()
+            agora
         );
         repositorioSessao.salvar(sessao);
 
-        // 2) Atualizar DesempenhoTopico (última sessão)
-        DesempenhoTopico desempenho = new DesempenhoTopico(
-            topicoId,
-            questoesRespondidas,
-            acertos,
-            percentual
-        );
-        repositorioDesempenho.salvar(desempenho);
-
-        // 3) Criar revisões automáticas
+        // 5) Criar revisões automáticas
         criarRevisoesAutomaticas(topicoId, percentual);
 
         return new DesempenhoResponse(

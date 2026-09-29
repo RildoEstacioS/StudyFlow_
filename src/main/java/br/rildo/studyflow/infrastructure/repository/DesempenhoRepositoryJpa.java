@@ -28,5 +28,7 @@ public interface DesempenhoRepositoryJpa
         return findByTopicoId(topicoId);
     }
 
+    Optional<DesempenhoTopico> findFirstByTopicoIdOrderByUltimaAtualizacaoDesc(Long topicoId);
+
     Optional<DesempenhoTopico> findByTopicoId(Long topicoId);
 }
