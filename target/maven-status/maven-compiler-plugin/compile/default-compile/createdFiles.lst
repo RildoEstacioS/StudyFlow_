@@ -7,7 +7,6 @@ br\rildo\studyflow\api\dto\TopicoResponse.class
 br\rildo\studyflow\infrastructure\repository\RevisaoRepositoryEmMemoria.class
 br\rildo\studyflow\api\dto\CriarTopicoRequest.class
 br\rildo\studyflow\infrastructure\repository\ConfigDiaSemanaRepositoryJpa.class
-br\rildo\studyflow\api\controller\ConfiguracaoCronogramaWebController.class
 br\rildo\studyflow\api\dto\RevisaoResponse.class
 br\rildo\studyflow\infrastructure\repository\DisciplinaRepositoryJpa.class
 br\rildo\studyflow\StudyFlowApplication.class
@@ -35,7 +34,6 @@ br\rildo\studyflow\api\controller\DesempenhoWebController$DesempenhoForm.class
 br\rildo\studyflow\infrastructure\repository\PreparacaoRepositoryEmMemoria.class
 br\rildo\studyflow\application\service\RevisaoService.class
 br\rildo\studyflow\infrastructure\repository\TarefaEstudoRepositoryJpa.class
-br\rildo\studyflow\api\controller\ConfiguracaoCronogramaWebController$ConfigDiaSemanaForm.class
 br\rildo\studyflow\infrastructure\repository\TopicoRepositoryJpa.class
 br\rildo\studyflow\api\controller\DesempenhoController.class
 br\rildo\studyflow\domain\Topico.class

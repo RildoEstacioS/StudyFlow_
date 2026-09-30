@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Cronogramas</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <h1>Meus Cronogramas</h1>
+    
+    <div class="mb-3">
+        <a th:href="@{/preparacoes}" class="btn btn-secondary">← Voltar para Preparações</a>
+        <a th:href="@{/preparacoes/novo}" class="btn btn-primary">Nova Preparação</a>
+    </div>
+    
+    <div th:if="${#lists.isEmpty(preparacoes)}" class="alert alert-info">
+        Nenhum cronograma criado ainda. Comece criando uma nova preparação!
+    </div>
+    
+    <table class="table table-striped" th:unless="${#lists.isEmpty(preparacoes)}">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Banca</th>
+                <th>Data Alvo</th>
+                <th>Criado em</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="prep : ${preparacoes}">
+                <td th:text="${prep.nome}">Nome</td>
+                <td th:text="${prep.banca}">Banca</td>
+                <td th:text="${#temporals.format(prep.dataAlvo, 'dd/MM/yyyy')}">Data</td>
+                <td th:text="${#temporals.format(prep.criadaEm, 'dd/MM/yyyy HH:mm')}">Criado</td>
+                <td>
+                    <a th:href="@{/preparacoes/{id}/cronograma/visualizar(id=${prep.id})}" 
+                       class="btn btn-sm btn-info" title="Visualizar calendário">
+                        📅 Visualizar
+                    </a>
+                    <a th:href="@{/preparacoes/{id}/cronograma/configurar(id=${prep.id})}" 
+                       class="btn btn-sm btn-warning" title="Regenerar cronograma">
+                        ✏️ Regenerar
+                    </a>
+                    <form th:action="@{/cronogramas/{id}/excluir(id=${prep.id})}" 
+                          method="post" 
+                          style="display:inline"
+                          onsubmit="return confirm('Tem certeza que deseja excluir este cronograma? Esta ação não pode ser desfeita.')">
+                        <button type="submit" class="btn btn-sm btn-danger" title="Excluir cronograma">
+                            🗑️ Excluir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

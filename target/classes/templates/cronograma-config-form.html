@@ -7,28 +7,17 @@
 
     <title>Configurar cronograma - StudyFlow</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-semibold" th:href="@{/}">
-            StudyFlow
-        </a>
-
+        <a class="navbar-brand fw-semibold" th:href="@{/}">StudyFlow</a>
         <div class="navbar-nav">
-            <a class="nav-link" th:href="@{/}">
-                Dashboard
-            </a>
-
-            <a class="nav-link active" th:href="@{/preparacoes}">
-                Preparações
-            </a>
+            <a class="nav-link" th:href="@{/}">Dashboard</a>
+            <a class="nav-link active" th:href="@{/preparacoes}">Preparações</a>
         </div>
     </div>
 </nav>
@@ -36,332 +25,124 @@
 <main class="container my-4">
 
     <div class="mb-4">
-        <a
-            class="text-decoration-none small"
-            th:href="@{/preparacoes/{id}(id=${preparacao.id})}"
-        >
-            ← Voltar para a preparação
-        </a>
-
+        <a class="text-decoration-none small" th:href="@{/preparacoes/{id}(id=${preparacao.id})}">← Voltar para a preparação</a>
         <h1 class="mt-2 mb-1">Configurar cronograma</h1>
+        <p class="text-muted mb-0">Preparação: <strong th:text="${preparacao.nome}">Nome da preparação</strong></p>
+        <p class="text-muted mb-0">Minutos disponíveis por semana: <strong th:text="${preparacao.minutosDisponiveisPorSemana} + ' minutos'">0 minutos</strong></p>
+    </div>
 
-        <p class="text-muted mb-0">
-            Preparação:
-            <strong th:text="${preparacao.nome}">Nome da preparação</strong>
-        </p>
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${erro}">Ocorreu um erro.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 
-        <p class="text-muted mb-0">
-            Minutos disponíveis por semana:
-            <strong th:text="${preparacao.minutosDisponiveisPorSemana} + ' minutos'">0 minutos</strong>
-        </p>
+    <div th:if="${erroMinutos}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${erroMinutos}">A soma dos minutos está incorreta.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${sucesso}">Operação realizada com sucesso.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body p-4">
-            <form
-                th:action="@{/preparacoes/{id}/cronograma/configurar(id=${preparacao.id})}"
-                th:object="${config}"
-                method="post"
-                id="formCronograma"
-            >
+            <form th:action="@{/preparacoes/{id}/cronograma/gerar(id=${preparacao.id})}" method="post" id="formCronograma">
                 <h5 class="mb-3">Geral</h5>
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label for="materiasPorDia" class="form-label">
-                            Matérias por dia
-                        </label>
-
+                        <label for="materiasPorDia" class="form-label">Matérias por dia</label>
                         <div class="btn-group" role="group">
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="materiasPorDia"
-                                id="materiasPorDia1"
-                                autocomplete="off"
-                                value="1"
-                                th:checked="${config.materiasPorDia == 1}"
-                                required
-                            >
-                            <label
-                                class="btn btn-outline-primary"
-                                for="materiasPorDia1"
-                            >
-                                1
-                            </label>
+                            <input type="radio" class="btn-check" name="materiasPorDia" id="materiasPorDia1" autocomplete="off" value="1" th:checked="${config.materiasPorDia == 1}" required>
+                            <label class="btn btn-outline-primary" for="materiasPorDia1">1</label>
 
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="materiasPorDia"
-                                id="materiasPorDia2"
-                                autocomplete="off"
-                                value="2"
-                                th:checked="${config.materiasPorDia == 2}"
-                            >
-                            <label
-                                class="btn btn-outline-primary"
-                                for="materiasPorDia2"
-                            >
-                                2
-                            </label>
+                            <input type="radio" class="btn-check" name="materiasPorDia" id="materiasPorDia2" autocomplete="off" value="2" th:checked="${config.materiasPorDia == 2}">
+                            <label class="btn btn-outline-primary" for="materiasPorDia2">2</label>
 
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="materiasPorDia"
-                                id="materiasPorDia3"
-                                autocomplete="off"
-                                value="3"
-                                th:checked="${config.materiasPorDia == 3}"
-                            >
-                            <label
-                                class="btn btn-outline-primary"
-                                for="materiasPorDia3"
-                            >
-                                3
-                            </label>
+                            <input type="radio" class="btn-check" name="materiasPorDia" id="materiasPorDia3" autocomplete="off" value="3" th:checked="${config.materiasPorDia == 3}">
+                            <label class="btn btn-outline-primary" for="materiasPorDia3">3</label>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="frequenciaSimulado" class="form-label">
-                            Frequência de simulados
-                        </label>
-
-                        <select
-                            id="frequenciaSimulado"
-                            class="form-select"
-                            name="frequenciaSimulado"
-                            th:value="${config.frequenciaSimulado}"
-                            required
-                        >
-                            <option
-                                th:each="f : ${frequenciasSimulado}"
-                                th:value="${f}"
-                                th:text="${f}"
-                            >
-                                NENHUM
-                            </option>
+                        <label for="frequenciaSimulado" class="form-label">Frequência de simulados</label>
+                        <select id="frequenciaSimulado" class="form-select" name="frequenciaSimulado" required>
+                            <option th:each="f : ${frequenciasSimulado}" th:value="${f}" th:text="${f}" th:selected="${config.frequenciaSimulado != null and config.frequenciaSimulado == f}">NENHUM</option>
                         </select>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="diaPreferencialSimulado" class="form-label">
-                            Dia preferencial do simulado
-                        </label>
+                        <label for="diaPreferencialSimulado" class="form-label">Dia preferencial do simulado</label>
+                        <div class="btn-group flex-wrap" role="group">
+                            <input type="radio" class="btn-check" name="diaPreferencialSimulado" id="simuladoIndiferente" autocomplete="off" value="" th:checked="${config.diaPreferencialSimulado == null}">
+                            <label class="btn btn-outline-secondary" for="simuladoIndiferente">Indiferente</label>
 
-                        <div class="btn-group" role="group">
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="diaPreferencialSimulado"
-                                id="simuladoIndiferente"
-                                autocomplete="off"
-                                value=""
-                                th:checked="${config.diaPreferencialSimulado == null}"
-                            >
-                            <label
-                                class="btn btn-outline-secondary"
-                                for="simuladoIndiferente"
-                            >
-                                Indiferente
-                            </label>
+                            <input type="radio" class="btn-check" name="diaPreferencialSimulado" id="simuladoDomingo" autocomplete="off" value="0" th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 0}">
+                            <label class="btn btn-outline-secondary" for="simuladoDomingo">Domingo</label>
 
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="diaPreferencialSimulado"
-                                id="simuladoDomingo"
-                                autocomplete="off"
-                                value="0"
-                                th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 0}"
-                            >
-                            <label
-                                class="btn btn-outline-secondary"
-                                for="simuladoDomingo"
-                            >
-                                Domingo
-                            </label>
+                            <input type="radio" class="btn-check" name="diaPreferencialSimulado" id="simuladoSegunda" autocomplete="off" value="1" th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 1}">
+                            <label class="btn btn-outline-secondary" for="simuladoSegunda">Segunda</label>
 
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="diaPreferencialSimulado"
-                                id="simuladoSegunda"
-                                autocomplete="off"
-                                value="1"
-                                th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 1}"
-                            >
-                            <label
-                                class="btn btn-outline-secondary"
-                                for="simuladoSegunda"
-                            >
-                                Segunda
-                            </label>
-
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="diaPreferencialSimulado"
-                                id="simuladoSabado"
-                                autocomplete="off"
-                                value="6"
-                                th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 6}"
-                            >
-                            <label
-                                class="btn btn-outline-secondary"
-                                for="simuladoSabado"
-                            >
-                                Sábado
-                            </label>
+                            <input type="radio" class="btn-check" name="diaPreferencialSimulado" id="simuladoSabado" autocomplete="off" value="6" th:checked="${config.diaPreferencialSimulado != null and config.diaPreferencialSimulado == 6}">
+                            <label class="btn btn-outline-secondary" for="simuladoSabado">Sábado</label>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="tipoRevisao" class="form-label">
-                            Tipo de revisão
-                        </label>
-
-                        <select
-                            id="tipoRevisao"
-                            class="form-select"
-                            name="tipoRevisao"
-                            th:value="${config.tipoRevisao}"
-                            required
-                        >
-                            <option
-                                th:each="t : ${tiposRevisao}"
-                                th:value="${t}"
-                                th:text="${t}"
-                            >
-                                POR_DESEMPENHO
-                            </option>
+                        <label for="tipoRevisao" class="form-label">Tipo de revisão</label>
+                        <select id="tipoRevisao" class="form-select" name="tipoRevisao" required>
+                            <option th:each="t : ${tiposRevisao}" th:value="${t}" th:text="${t}" th:selected="${config.tipoRevisao != null and config.tipoRevisao == t}">POR_DESEMPENHO</option>
                         </select>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="intervaloRevisaoDias" class="form-label">
-                            Intervalo fixo de revisões (dias)
-                        </label>
-
-                        <input
-                            id="intervaloRevisaoDias"
-                            type="number"
-                            class="form-control"
-                            name="intervaloRevisaoDias"
-                            th:value="${config.intervaloRevisaoDias}"
-                            min="1"
-                            max="30"
-                            placeholder="Ex.: 5"
-                        >
-
-                        <div class="form-text">
-                            Preencha apenas se quiser usar intervalo fixo.
-                        </div>
+                        <label for="intervaloRevisaoDias" class="form-label">Intervalo fixo de revisões (dias)</label>
+                        <input id="intervaloRevisaoDias" type="number" class="form-control" name="intervaloRevisaoDias" th:value="${config.intervaloRevisaoDias}" min="1" max="30" placeholder="Ex.: 5">
+                        <div class="form-text">Preencha apenas se escolher uma revisão por intervalo fixo.</div>
                     </div>
                 </div>
 
                 <h5 class="mb-3">Dias da semana</h5>
-                <p class="text-muted small mb-3">
-                    Selecione os dias em que você pretende estudar e informe quantos minutos por dia.
-                </p>
+                <p class="text-muted small mb-3">Selecione os dias em que pretende estudar e informe os minutos disponíveis por dia.</p>
 
-                <!-- Mensagem de validação -->
-                <div
-                    id="mensagemValidacao"
-                    class="alert alert-warning"
-                    style="display: none;"
-                >
+                <div id="mensagemValidacao" class="alert alert-warning" style="display: none;">
                     <strong>Atenção!</strong>
                     <span id="textoValidacao"></span>
                 </div>
 
                 <div class="row g-3 mb-4">
-                    <th:block
-                        th:each="dia : ${diasSemana}"
-                        th:with="configDia=${configsDia.?[diaSemana == dia].isEmpty() ? null : configsDia.?[diaSemana == dia][0]}"
-                    >
+                    <th:block th:each="dia : ${diasSemana}" th:with="configDia=${configsDia.?[diaSemana == dia].isEmpty() ? null : configsDia.?[diaSemana == dia][0]}">
                         <div class="col-md-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="form-check mb-2">
-                                        <input
-                                            class="form-check-input dia-checkbox"
-                                            type="checkbox"
-                                            th:id="'diaSelecionado' + ${dia.valor}"
-                                            th:name="'configsDia[' + ${dia.valor} + '].selecionado'"
-                                            th:checked="${configDia != null}"
-                                            onchange="calcularTotalMinutos()"
-                                        >
-                                        <label
-                                            class="form-check-label fw-semibold"
-                                            th:for="'diaSelecionado' + ${dia.valor}"
-                                            th:text="${dia}"
-                                        >
-                                            SEGUNDA
-                                        </label>
+                                        <input class="form-check-input dia-checkbox" type="checkbox" name="configsDia_selecionado" th:value="${dia.valor}" th:data-dia="${dia.valor}" th:checked="${configDia != null}" onchange="calcularTotalMinutos()">
+                                        <label class="form-check-label fw-semibold" th:for="'diaSelecionado' + ${dia.valor}" th:text="${dia}">SEGUNDA</label>
                                     </div>
 
-                                    <input
-                                        type="hidden"
-                                        th:name="'configsDia[' + ${dia.valor} + '].diaSemanaValor'"
-                                        th:value="${dia.valor}"
-                                    >
+                                    <input type="hidden" name="configsDia_diaSemanaValor" th:value="${dia.valor}">
 
-                                    <label
-                                        th:for="'minutos' + ${dia.valor}"
-                                        class="form-label small"
-                                    >
-                                        Minutos por dia
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        class="form-control dia-minutos"
-                                        th:id="'minutos' + ${dia.valor}"
-                                        th:name="'configsDia[' + ${dia.valor} + '].minutosDiarios'"
-                                        th:value="${configDia != null ? configDia.minutosDiarios : 60}"
-                                        min="0"
-                                        max="300"
-                                        placeholder="Ex.: 60"
-                                        onchange="calcularTotalMinutos()"
-                                        onkeyup="calcularTotalMinutos()"
-                                    >
+                                    <label th:for="'minutos' + ${dia.valor}" class="form-label small">Minutos por dia</label>
+                                    <input type="number" class="form-control dia-minutos" th:id="'minutos' + ${dia.valor}" name="configsDia_minutosDiarios" th:data-dia="${dia.valor}" th:value="${configDia != null ? configDia.minutosDiarios : 60}" min="0" max="300" placeholder="Ex.: 60" onchange="calcularTotalMinutos()" onkeyup="calcularTotalMinutos()">
                                 </div>
                             </div>
                         </div>
                     </th:block>
                 </div>
 
-                <!-- Total de minutos -->
                 <div class="alert alert-info mb-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>Total semanal:</strong>
-                            <span id="totalMinutos">0</span> minutos
-                        </div>
-                        <div>
-                            <strong>Esperado:</strong>
-                            <span th:text="${preparacao.minutosDisponiveisPorSemana}">0</span> minutos
-                        </div>
-                        <div>
-                            <strong id="statusTotal" class="text-success">OK</strong>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div><strong>Total semanal:</strong> <span id="totalMinutos">0</span> minutos</div>
+                        <div><strong>Esperado:</strong> <span th:text="${preparacao.minutosDisponiveisPorSemana}">0</span> minutos</div>
+                        <div><strong id="statusTotal" class="text-success">OK</strong></div>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a
-                        class="btn btn-outline-secondary"
-                        th:href="@{/preparacoes/{id}(id=${preparacao.id})}"
-                    >
-                        Cancelar
-                    </a>
-
-                    <button type="submit" class="btn btn-primary" id="btnSalvar">
-                        Salvar configuração
-                    </button>
+                    <a class="btn btn-outline-secondary" th:href="@{/preparacoes/{id}(id=${preparacao.id})}">Cancelar</a>
+                    <button type="submit" class="btn btn-success" id="btnGerar">Gerar cronograma</button>
                 </div>
             </form>
         </div>
@@ -374,73 +155,64 @@
     <small>StudyFlow © 2026</small>
 </footer>
 
-<!-- Elemento invisível com o valor dos minutos esperados -->
 <span id="minutosEsperadosValue" th:text="${preparacao.minutosDisponiveisPorSemana}" style="display: none;"></span>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Validação de minutos -->
-<!-- Validação de minutos -->
 <script>
-    // Minutos esperados por semana (lido do elemento invisível)
     const minutosEsperados = parseInt(document.getElementById('minutosEsperadosValue').textContent) || 0;
 
     function calcularTotalMinutos() {
         let total = 0;
 
-        // Para cada checkbox de dia
-        document.querySelectorAll('.dia-checkbox').forEach(function(checkbox) {
-            if (checkbox.checked) {
-                // Extrai o número do dia do name (ex: configsDia[1].selecionado -> 1)
-                const match = checkbox.name.match(/configsDia\[(\d+)\]\.selecionado/);
-                if (match && match[1]) {
-                    const diaValor = match[1];
-                    const inputMinutos = document.getElementById('minutos' + diaValor);
-                    if (inputMinutos) {
-                        const minutos = parseInt(inputMinutos.value) || 0;
-                        total += minutos;
-                    }
-                }
+        document.querySelectorAll('input[name="configsDia_selecionado"]').forEach(function(checkbox) {
+            if (!checkbox.checked) {
+                return;
+            }
+
+            const diaValor = checkbox.getAttribute('data-dia');
+            const inputMinutos = document.querySelector(
+                'input[name="configsDia_minutosDiarios"][data-dia="' + diaValor + '"]'
+            );
+
+            if (inputMinutos) {
+                total += parseInt(inputMinutos.value) || 0;
             }
         });
 
-        // Atualiza display
         document.getElementById('totalMinutos').textContent = total;
 
-        // Valida
         const mensagemDiv = document.getElementById('mensagemValidacao');
         const textoSpan = document.getElementById('textoValidacao');
         const statusSpan = document.getElementById('statusTotal');
-        const btnSalvar = document.getElementById('btnSalvar');
+        const btnGerar = document.getElementById('btnGerar');
 
         if (total === minutosEsperados) {
             mensagemDiv.style.display = 'none';
             statusSpan.textContent = '✓ OK';
             statusSpan.className = 'text-success';
-            btnSalvar.disabled = false;
-        } else if (total < minutosEsperados) {
+            btnGerar.disabled = false;
+            return;
+        }
+
+        if (total < minutosEsperados) {
             mensagemDiv.className = 'alert alert-warning';
             mensagemDiv.style.display = 'block';
-            textoSpan.textContent = 
-                'A soma dos minutos (' + total + ') está abaixo do esperado (' + minutosEsperados + ' minutos). ' +
-                'Faltam ' + (minutosEsperados - total) + ' minutos.';
+            textoSpan.textContent = 'A soma dos minutos (' + total + ') está abaixo do esperado (' + minutosEsperados + ' minutos). Faltam ' + (minutosEsperados - total) + ' minutos.';
             statusSpan.textContent = '⚠ Abaixo';
             statusSpan.className = 'text-warning';
-            btnSalvar.disabled = false;
-        } else {
-            mensagemDiv.className = 'alert alert-danger';
-            mensagemDiv.style.display = 'block';
-            textoSpan.textContent = 
-                'A soma dos minutos (' + total + ') ultrapassa o esperado (' + minutosEsperados + ' minutos). ' +
-                'Excedeu ' + (total - minutosEsperados) + ' minutos.';
-            statusSpan.textContent = '✖ Acima';
-            statusSpan.className = 'text-danger';
-            btnSalvar.disabled = true;
+            btnGerar.disabled = true;
+            return;
         }
+
+        mensagemDiv.className = 'alert alert-danger';
+        mensagemDiv.style.display = 'block';
+        textoSpan.textContent = 'A soma dos minutos (' + total + ') ultrapassa o esperado (' + minutosEsperados + ' minutos). Excedeu ' + (total - minutosEsperados) + ' minutos.';
+        statusSpan.textContent = '✖ Acima';
+        statusSpan.className = 'text-danger';
+        btnGerar.disabled = true;
     }
 
-    // Calcula ao carregar a página
     document.addEventListener('DOMContentLoaded', function() {
         calcularTotalMinutos();
     });
